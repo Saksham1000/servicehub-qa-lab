@@ -131,12 +131,7 @@ The repository demonstrates that useful QA work begins with testable requirement
 ## Future improvements
 UTC-aware time handling, Alembic migrations, database-level active-slot constraint strategy, true concurrent booking tests, richer provider/admin UI, WCAG accessibility checks, token revocation, contract generation, Firefox CI matrix, and real controlled baseline results.
 
-## Study order
-1. `docs/requirements/SRS.md`
-2. `docs/test-management/Test_Plan.md`
-3. `docs/test-management/Test_Cases.csv` and `RTM.csv`
-4. `app/backend/app/main.py`
-5. `automation/ui/tests/test_booking.py` and `app/backend/tests/test_api.py`
+
 
 Then use [`LEARNING_GUIDE.md`](LEARNING_GUIDE.md), [`INTERVIEW_GUIDE.md`](INTERVIEW_GUIDE.md), and [`DEMO_GUIDE.md`](DEMO_GUIDE.md).
 
