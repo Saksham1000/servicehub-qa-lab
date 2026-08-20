@@ -1,0 +1,62 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+
+# Local databases and runtime state
+*.db
+*.sqlite
+*.sqlite3
+*.log
+*.pid
+
+# Frontend dependencies and builds
+node_modules/
+dist/
+.vite/
+coverage/
+
+# Generated QA reports and screenshots
+/reports/**
+!/reports/.gitkeep
+!/reports/screenshots/
+/reports/screenshots/**
+!/reports/screenshots/.gitkeep
+/app/frontend/reports/
+
+# Performance and test output
+locust_stats*.csv
+locust_failures*.csv
+locust_exceptions*.csv
+allure-results/
+allure-report/
+
+# IDE and operating system
+.idea/
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~

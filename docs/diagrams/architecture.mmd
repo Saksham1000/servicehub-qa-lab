@@ -1,0 +1,11 @@
+flowchart LR
+  B[Chrome / Firefox / responsive web] --> F[React + Vite / Nginx]
+  F -->|REST + JWT| A[FastAPI]
+  F -->|GraphQL + JWT| A
+  A --> O[SQLAlchemy]
+  O --> M[(MySQL 8.4)]
+  T[Pytest: Selenium / Requests / GraphQL / DB] --> F
+  T --> A
+  T --> M
+  L[Locust] --> A
+  C[GitHub Actions] --> T

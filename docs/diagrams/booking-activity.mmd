@@ -1,0 +1,9 @@
+flowchart TD
+  A[Authenticated customer selects service/provider] --> B[Request future availability]
+  B --> C{Slot selected?}
+  C -- No --> B
+  C -- Yes --> D[POST booking]
+  D --> E{Service/provider exist and slot free?}
+  E -- No --> F[4xx safe error; no write]
+  E -- Yes --> G[Commit confirmed booking]
+  G --> H[Return 201 and show My appointments]

@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: servicehub
+      MYSQL_USER: servicehub
+      MYSQL_PASSWORD: servicehub_demo
+      MYSQL_ROOT_PASSWORD: local_root_demo
+    ports: ["3306:3306"]
+    volumes: ["mysql_data:/var/lib/mysql"]
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost","-ulocalhost","-plocal_root_demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  backend:
+    build: ./app/backend
+    environment:
+      DATABASE_URL: mysql+pymysql://servicehub:servicehub_demo@db:3306/servicehub
+      JWT_SECRET: ${JWT_SECRET:-local-compose-secret}
+      QA_BUG_MODE: ${QA_BUG_MODE:-false}
+    ports: ["8000:8000"]
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD","python","-c","import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+  frontend:
+    build: ./app/frontend
+    ports: ["5173:80"]
+    depends_on:
+      backend: {condition: service_healthy}
+volumes: {mysql_data: {}}

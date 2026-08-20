@@ -1,0 +1,82 @@
+﻿Test Case ID,Requirement ID,Module,Test Scenario,Test Case Description,Preconditions,Test Steps,Test Data,Expected Result,Actual Result,Priority,Severity if Failed,Test Type,Automation Candidate,Status
+TC-AUTH-001,REQ-AUTH-001,Authentication,Valid registration,Register a new customer,None,"Open Register; enter valid data; submit",Unique email and Strong123!,201 account created; no token; sign-in screen shown,Not executed,High,High,Positive,Yes,Not Run
+TC-AUTH-002,REQ-AUTH-001,Authentication,Duplicate email,Reject exact duplicate,Existing customer,"Submit same email again",Existing email,409 with safe message and no duplicate row,Not executed,High,High,Negative,Yes,Not Run
+TC-AUTH-003,REQ-AUTH-001,Authentication,Email case duplicate,Reject case variant,Existing customer,"Register email with changed case",USER@example.com,409 conflict,Not executed,High,High,Boundary,Yes,Not Run
+TC-AUTH-004,REQ-AUTH-001,Authentication,Invalid email,Validate email syntax,None,"Submit malformed email",user-at-example,422 field error,Not executed,Medium,Medium,Validation,Yes,Not Run
+TC-AUTH-005,REQ-AUTH-001,Authentication,Blank name,Require name,None,"Leave name blank; submit",Blank,422 validation error,Not executed,Medium,Medium,Negative,Yes,Not Run
+TC-AUTH-006,REQ-AUTH-001,Authentication,Password below minimum,Test 7-character boundary,None,"Submit registration",Abc1234,422 validation error,Not executed,High,High,Boundary,Yes,Not Run
+TC-AUTH-007,REQ-AUTH-001,Authentication,Password minimum,Test valid 8-character boundary,None,"Submit registration",Abcdef12,Customer created,Not executed,High,High,Boundary,Yes,Not Run
+TC-AUTH-008,REQ-AUTH-001,Authentication,Password lacks number,Require mixed content,None,"Submit registration",OnlyLetters,422 validation error,Not executed,High,Medium,Validation,Yes,Not Run
+TC-AUTH-009,REQ-AUTH-002,Authentication,Valid login,Authenticate registered customer,Customer exists,"Enter valid credentials; submit",Valid account,200 JWT and role returned,Not executed,High,Critical,Positive,Yes,Not Run
+TC-AUTH-010,REQ-AUTH-002,Authentication,Wrong password,Reject incorrect secret,Customer exists,"Login with wrong password",Wrong123!,401 generic error and no token,Not executed,High,High,Negative,Yes,Not Run
+TC-AUTH-011,REQ-AUTH-002,Authentication,Unknown email,Reject unknown identity,None,"Login with unknown email",missing@example.com,401 generic error,Not executed,High,Medium,Negative,Yes,Not Run
+TC-AUTH-012,REQ-AUTH-002,Authentication,Logout,End client session,Authenticated,"Click Logout; revisit protected view",Valid session,Token removed and login shown,Not executed,High,High,Functional,Yes,Not Run
+TC-AUTH-013,REQ-AUTH-003,Authentication,Missing token,Protect bookings,None,"GET /api/bookings/me",No header,401 response,Not executed,High,Critical,Security,Yes,Not Run
+TC-AUTH-014,REQ-AUTH-003,Authentication,Malformed token,Reject altered JWT,None,"Send protected request",Bearer invalid,401 response without data,Not executed,High,Critical,Security,Yes,Not Run
+TC-AUTH-015,REQ-AUTH-003,Authentication,Expired token,Reject expired JWT,Expired token available,"Send protected request",Expired JWT,401 response,Not executed,High,Critical,Security,Yes,Not Run
+TC-SVC-001,REQ-SVC-001,Services,List active services,View catalog,Seed data,"GET /api/services",None,200 and active service schema,Not executed,High,High,Positive,Yes,Not Run
+TC-SVC-002,REQ-SVC-001,Services,Search exact,Find exact service,Seed data,"Search Massage",Massage,Matching service only,Not executed,Medium,Medium,Functional,Yes,Not Run
+TC-SVC-003,REQ-SVC-001,Services,Case-insensitive search,Search uppercase,Seed data,"Search MASSAGE",MASSAGE,Massage returned,Not executed,High,Medium,Regression,Yes,Not Run
+TC-SVC-004,REQ-SVC-001,Services,Partial search,Find partial name,Seed data,"Search mass",mass,Massage returned,Not executed,Medium,Medium,Functional,Yes,Not Run
+TC-SVC-005,REQ-SVC-001,Services,No matches,Handle empty result,Seed data,"Search impossible term",zz-no-match,200 empty list and clear UI state,Not executed,Low,Low,Negative,Yes,Not Run
+TC-SVC-006,REQ-SVC-001,Services,Category filter,Filter wellness,Seed data,"GET with category",Wellness,Only Wellness services,Not executed,Medium,Medium,Functional,Yes,Not Run
+TC-SVC-007,REQ-SVC-001,Services,Inactive hidden,Hide deactivated service,Admin deactivated item,"List/search services",Inactive ID,Item absent,Not executed,High,High,Authorization,Yes,Not Run
+TC-SVC-008,REQ-SVC-002,Providers,List providers,View provider cards,Seed provider,"GET /api/providers",None,Identity and bio returned,Not executed,Medium,Medium,Positive,Yes,Not Run
+TC-SVC-009,REQ-SVC-002,Providers,Available slots,Show future unbooked slots,Availability exists,"GET provider availability",Provider 1,Only future free slots,Not executed,High,High,Integration,Yes,Not Run
+TC-SVC-010,REQ-SVC-002,Providers,Invalid provider,Handle missing provider,None,"GET provider 999",999,404 response,Not executed,Medium,Medium,Negative,Yes,Not Run
+TC-BOOK-001,REQ-BOOK-001,Booking,Valid booking,Book advertised slot,Customer authenticated,"Select service/provider/free slot; submit",Future slot,201 confirmed booking persisted,Not executed,High,Critical,Positive,Yes,Not Run
+TC-BOOK-002,REQ-BOOK-002,Booking,Past date,Reject past booking,Customer authenticated,"POST past appointment",Yesterday,422 response and no row,Not executed,High,High,Boundary,Yes,Not Run
+TC-BOOK-003,REQ-BOOK-002,Booking,Current-time boundary,Reject now,Customer authenticated,"POST current time",Now,422 response,Not executed,High,High,Boundary,Yes,Not Run
+TC-BOOK-004,REQ-BOOK-002,Booking,Unadvertised future slot,Reject unavailable time,Customer authenticated,"POST arbitrary future time",Future non-slot,409 response,Not executed,High,High,Negative,Yes,Not Run
+TC-BOOK-005,REQ-BOOK-002,Booking,Duplicate booking,Reject same provider/time,Active booking exists,"Book identical slot",Same payload,409 and one active row,Not executed,High,Critical,Regression,Yes,Not Run
+TC-BOOK-006,REQ-BOOK-002,Booking,Second customer conflict,Prevent provider overlap,Slot booked by customer A,"Customer B books same slot",Same provider/time,409 and original remains,Not executed,High,Critical,Concurrency,Yes,Not Run
+TC-BOOK-007,REQ-BOOK-001,Booking,Invalid service,Reject missing service,Customer authenticated,"POST service 999",999,404 and no booking,Not executed,Medium,High,Negative,Yes,Not Run
+TC-BOOK-008,REQ-BOOK-001,Booking,Invalid provider,Reject missing provider,Customer authenticated,"POST provider 999",999,404 and no booking,Not executed,Medium,High,Negative,Yes,Not Run
+TC-BOOK-009,REQ-BOOK-001,Booking,Missing field,Validate payload,Customer authenticated,"Omit service_id",Missing service,422 field error,Not executed,Medium,Medium,Validation,Yes,Not Run
+TC-BOOK-010,REQ-BOOK-003,Booking,View own,Customer booking visibility,Customer has bookings,"Open My appointments",Own records,Only own bookings shown,Not executed,High,Critical,Authorization,Yes,Not Run
+TC-BOOK-011,REQ-BOOK-003,Booking,View isolation,Hide other customer's records,Two customers have bookings,"Customer A lists bookings",Mixed data,No customer B record,Not executed,High,Critical,Security,Yes,Not Run
+TC-BOOK-012,REQ-BOOK-003,Booking,Reschedule valid,Move to free slot,Owned confirmed booking,"PATCH to another free slot",Future advertised slot,200 and persisted new time,Not executed,High,High,Positive,Yes,Not Run
+TC-BOOK-013,REQ-BOOK-003,Booking,Reschedule occupied,Reject occupied target,Owned booking and occupied slot,"PATCH occupied time",Occupied slot,409 and original unchanged,Not executed,High,Critical,Negative,Yes,Not Run
+TC-BOOK-014,REQ-BOOK-003,Booking,Reschedule foreign,Reject other owner,Booking belongs to B,"A patches B booking",B booking ID,403 and unchanged,Not executed,High,Critical,Security,Yes,Not Run
+TC-BOOK-015,REQ-BOOK-003,Booking,Cancel own,Cancel confirmed booking,Owned booking,"DELETE booking",Own ID,204 and status cancelled,Not executed,High,Critical,Positive,Yes,Not Run
+TC-BOOK-016,REQ-BOOK-003,Booking,Cancel releases slot,Reuse cancelled time,Cancelled booking,"Book same provider/time again",Cancelled slot,201 new confirmed booking,Not executed,High,Critical,Regression,Yes,Not Run
+TC-BOOK-017,REQ-BOOK-003,Booking,Cancel foreign,Reject other owner,Booking belongs to B,"A deletes B booking",B ID,403 and status unchanged,Not executed,High,Critical,Security,Yes,Not Run
+TC-BOOK-018,REQ-BOOK-003,Booking,Invalid booking ID,Handle missing record,Authenticated,"PATCH/DELETE 999",999,404 response,Not executed,Medium,Medium,Negative,Yes,Not Run
+TC-PROV-001,REQ-PROV-001,Provider,Create availability,Add valid future range,Provider authenticated,"POST valid range",Future start/end,201 slot for caller,Not executed,High,High,Positive,Yes,Not Run
+TC-PROV-002,REQ-PROV-001,Provider,Past availability,Reject past range,Provider authenticated,"POST past range",Past times,422 and no row,Not executed,High,High,Boundary,Yes,Not Run
+TC-PROV-003,REQ-PROV-001,Provider,Inverted range,Reject end before start,Provider authenticated,"POST inverted range",End < start,422 response,Not executed,Medium,High,Validation,Yes,Not Run
+TC-PROV-004,REQ-PROV-001,Provider,Duplicate availability,Reject duplicate start,Existing slot,"POST same slot",Duplicate,409 and one row,Not executed,Medium,Medium,Negative,Yes,Not Run
+TC-PROV-005,REQ-PROV-001,Provider,Customer creates availability,Enforce provider role,Customer authenticated,"POST provider availability",Valid range,403 response,Not executed,High,Critical,Security,Yes,Not Run
+TC-PROV-006,REQ-PROV-002,Provider,View own appointments,Scope provider list,Two providers have bookings,"Provider A lists",Mixed,Only A appointments,Not executed,High,Critical,Authorization,Yes,Not Run
+TC-PROV-007,REQ-PROV-002,Provider,Complete own appointment,Update status,Own appointment,"PATCH complete",Own ID,200 completed and persisted,Not executed,High,High,Positive,Yes,Not Run
+TC-PROV-008,REQ-PROV-002,Provider,Complete foreign appointment,Protect ownership,Other provider booking,"PATCH complete",Foreign ID,403 unchanged,Not executed,High,Critical,Security,Yes,Not Run
+TC-ADMIN-001,REQ-ADMIN-001,Admin,Create service,Add valid catalog item,Admin authenticated,"POST service",Valid fields,201 active service visible,Not executed,High,High,Positive,Yes,Not Run
+TC-ADMIN-002,REQ-ADMIN-001,Admin,Invalid service price,Reject negative price,Admin authenticated,"POST negative price",-1,422 and no service,Not executed,Medium,Medium,Boundary,Yes,Not Run
+TC-ADMIN-003,REQ-ADMIN-001,Admin,Update service,Modify catalog item,Admin and service exist,"PATCH valid fields",Changed price/name,200 and list reflects update,Not executed,High,High,Functional,Yes,Not Run
+TC-ADMIN-004,REQ-ADMIN-001,Admin,Deactivate service,Soft deactivate,Admin and service exist,"DELETE service",Active ID,active false and public list hides it,Not executed,High,High,Integration,Yes,Not Run
+TC-ADMIN-005,REQ-ADMIN-001,Admin,Customer create service,Reject customer,Customer authenticated,"POST admin service",Valid fields,403 and no row,Not executed,High,Critical,Security,Yes,Not Run
+TC-ADMIN-006,REQ-ADMIN-002,Admin,View users,Admin operational visibility,Admin authenticated,"GET admin users",None,200 roles without password hashes,Not executed,High,High,Security,Yes,Not Run
+TC-ADMIN-007,REQ-ADMIN-002,Admin,View bookings,Admin operational visibility,Admin authenticated,"GET admin bookings",None,200 all bookings,Not executed,High,High,Positive,Yes,Not Run
+TC-ADMIN-008,REQ-ADMIN-002,Admin,Customer admin access,Reject privilege escalation,Customer authenticated,"GET admin users/bookings",Customer token,403 without data,Not executed,High,Critical,Security,Yes,Not Run
+TC-API-001,REQ-API-001,REST API,Content type,Return JSON contract,API running,"Call JSON endpoint",Accept JSON,Correct content type and parseable body,Not executed,Medium,Medium,Contract,Yes,Not Run
+TC-API-002,REQ-API-001,REST API,Malformed JSON,Handle parser failure,API running,"POST truncated JSON",Malformed body,422 without server error,Not executed,Medium,Medium,Negative,Yes,Not Run
+TC-API-003,REQ-API-001,REST API,Method not allowed,Reject wrong verb,API running,"PUT auth login",Wrong method,405 response,Not executed,Low,Low,Negative,Yes,Not Run
+TC-API-004,REQ-API-001,REST API,Error schema,Validate safe detail,API running,"Cause 401/404/409",Invalid inputs,Stable JSON detail and no stack trace,Not executed,High,High,Contract,Yes,Not Run
+TC-GQL-001,REQ-GQL-001,GraphQL,Valid services query,Query selected fields,API running,"POST services query",id name category,200 data list,Not executed,Medium,Medium,Positive,Yes,Not Run
+TC-GQL-002,REQ-GQL-001,GraphQL,Query variables,Filter with variable,API running,"POST query and variables",term mass,Only matches returned,Not executed,Medium,Medium,Functional,Yes,Not Run
+TC-GQL-003,REQ-GQL-001,GraphQL,Invalid field,GraphQL validation,API running,"Query unknown field",unknownField,200 envelope with errors and no field data,Not executed,Medium,Medium,Negative,Yes,Not Run
+TC-GQL-004,REQ-GQL-001,GraphQL,Malformed query,Parser handling,API running,"POST broken syntax",{ services,Error response without crash,Not executed,Medium,Medium,Negative,Yes,Not Run
+TC-GQL-005,REQ-GQL-002,GraphQL,Protected appointments,Require authentication,None,"Query appointments without token",No token,GraphQL error and no data,Not executed,High,Critical,Security,Yes,Not Run
+TC-GQL-006,REQ-GQL-002,GraphQL,Appointment scope,Return own data,Customer token and mixed bookings,"Query appointments",Valid JWT,Only caller records,Not executed,High,Critical,Authorization,Yes,Not Run
+TC-DB-001,REQ-DB-001,Database,Booking persistence,Reconcile API and row,API-created booking,"SELECT booking by ID",Booking ID,Fields match customer/provider/service/time/status,Not executed,High,Critical,Database,Yes,Not Run
+TC-DB-002,REQ-DB-001,Database,Cancellation persistence,Verify state change,Cancelled through API,"SELECT status",Booking ID,cancelled stored,Not executed,High,Critical,Database,Yes,Not Run
+TC-DB-003,REQ-DB-001,Database,Referential integrity,Find orphan bookings,Database available,"LEFT JOIN related tables",All bookings,Zero orphan rows,Not executed,High,Critical,Database,Yes,Not Run
+TC-DB-004,REQ-DB-001,Database,Active duplicates,Find double booking,Database available,"GROUP provider/time HAVING count>1",Active statuses,Zero groups,Not executed,High,Critical,Database,Yes,Not Run
+TC-DB-005,REQ-DB-001,Database,Status domain,Find unexpected status,Database available,"Query NOT IN allowed states",Status list,Zero invalid rows,Not executed,Medium,High,Database,Yes,Not Run
+TC-UI-001,REQ-UI-001,Responsive UI,Desktop journey,Validate large viewport,App running,"Use login/search/booking",1440x900,Controls visible and usable,Not executed,Medium,Medium,Responsive,Yes,Not Run
+TC-UI-002,REQ-UI-001,Responsive UI,Tablet portrait,Validate tablet viewport,App running,"Use navigation and search",768x1024,No blocked controls or horizontal loss,Not executed,Medium,Medium,Responsive,Yes,Not Run
+TC-UI-003,REQ-UI-001,Responsive UI,Mobile 390,Validate common mobile,App running,"Login and view services",390x844,Readable single-column UI and usable nav,Not executed,High,High,Responsive,Yes,Not Run
+TC-UI-004,REQ-UI-001,Responsive UI,Mobile minimum,Validate 360 width,App running,"Use critical controls",360x800,Controls accessible without overlap,Not executed,High,High,Boundary,Yes,Not Run
+TC-UI-005,REQ-UI-001,Responsive UI,Appointment view,View bookings on mobile,Customer has booking,"Open My appointments",390x844,Details and cancel control usable,Not executed,High,High,Responsive,Yes,Not Run
+TC-PERF-001,REQ-PERF-001,Performance,Common API baseline,Measure read-heavy load,Stable local environment,"Run Locust agreed users/spawn/duration",Configured workload,Failure <1% and common p95 <800ms,Not executed,Medium,High,Performance,Yes,Not Run
+

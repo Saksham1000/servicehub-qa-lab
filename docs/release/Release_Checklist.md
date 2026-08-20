@@ -1,0 +1,13 @@
+# Release Checklist
+- [ ] Build/version and change scope identified
+- [ ] Critical requirements and RTM reviewed
+- [ ] Smoke and full regression passed with retained reports
+- [ ] REST and GraphQL contracts verified
+- [ ] MySQL migrations and integrity queries checked
+- [ ] Customer/provider/admin authorization checked
+- [ ] No open Critical/High defects; known issues accepted
+- [ ] Responsive desktop/tablet/mobile tested; Firefox spot-check complete
+- [ ] Performance sanity completed or exception approved
+- [ ] Secrets/configuration and `QA_BUG_MODE=false` verified
+- [ ] Monitoring, backup, rollback owner and trigger defined
+- [ ] QA recommendation and product/engineering sign-off recorded

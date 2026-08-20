@@ -1,0 +1,15 @@
+sequenceDiagram
+  actor Customer
+  participant UI as React UI
+  participant API as FastAPI
+  participant DB as MySQL
+  Customer->>UI: Select service/provider/slot
+  UI->>API: POST /api/bookings + JWT
+  API->>API: Authenticate and authorize customer
+  API->>DB: Validate entities, availability, conflict
+  alt valid
+    API->>DB: INSERT confirmed booking / COMMIT
+    API-->>UI: 201 booking
+  else invalid/conflict
+    API-->>UI: 401/403/404/409/422
+  end

@@ -1,0 +1,46 @@
+name: QA Pipeline
+on: [push, pull_request]
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: servicehub
+          MYSQL_USER: servicehub
+          MYSQL_PASSWORD: servicehub_demo
+          MYSQL_ROOT_PASSWORD: local_root_demo
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -plocal_root_demo"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      DATABASE_URL: mysql+pymysql://servicehub:servicehub_demo@127.0.0.1:3306/servicehub
+      JWT_SECRET: ci-only-secret
+      API_BASE_URL: http://localhost:8000
+      BASE_URL: http://localhost:5173
+      HEADLESS: "true"
+      QA_BUG_MODE: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - uses: actions/setup-node@v4
+        with: {node-version: "22", cache: npm, cache-dependency-path: app/frontend/package-lock.json}
+      - run: pip install -r requirements.txt
+      - working-directory: app/frontend
+        run: npm install && npm run build && npm run dev -- --host 0.0.0.0 &
+      - working-directory: app/backend
+        run: uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+      - name: Wait for services
+        run: |
+          for i in {1..30}; do curl -fsS http://localhost:8000/health && curl -fsS http://localhost:5173 && exit 0; sleep 2; done
+          exit 1
+      - name: Backend API GraphQL database tests
+        run: pytest app/backend/tests automation/api automation/graphql automation/database --html=reports/api-report.html --junitxml=reports/api-junit.xml
+      - name: Selenium Chrome smoke
+        run: pytest automation/ui -m smoke --browser chrome --html=reports/ui-report.html --junitxml=reports/ui-junit.xml
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: {name: qa-reports, path: reports/, if-no-files-found: warn}

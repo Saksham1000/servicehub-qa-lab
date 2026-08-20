@@ -1,0 +1,8 @@
+-r app/backend/requirements.txt
+requests==2.32.3
+selenium==4.27.1
+pytest-html==4.1.1
+pytest-xdist==3.6.1
+jsonschema==4.23.0
+locust==2.32.5
+mysql-connector-python==9.1.0

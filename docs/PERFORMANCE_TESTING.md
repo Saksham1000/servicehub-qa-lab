@@ -1,0 +1,4 @@
+# Performance Test Plan
+Objective: establish a repeatable local baseline for login and read-heavy service/search/availability/appointment APIs. `locust -f performance/locustfile.py --host http://localhost:8000` opens the UI; headless example: `locust -f performance/locustfile.py --host http://localhost:8000 --headless -u 10 -r 2 -t 2m`. Users, spawn rate, duration, host, and test machine must be recorded.
+
+Project targets—not universal standards—are common API p95 under 800 ms and HTTP failure rate below 1% in a controlled local run. Review median/p95/p99, requests/second, failure grouping, application/DB CPU, connections, slow queries, and saturation. Correlate bottlenecks; rerun one change at a time. The default script performs no destructive booking load. **No performance run or result is claimed in this document.** Populate date/build/hardware/workload/throughput/percentiles/failures/observations after execution.

@@ -1,0 +1,19 @@
+Requirement ID,Requirement Description,Manual Test Cases,Automated Test Cases,Priority,Coverage Status
+REQ-AUTH-001,Validated unique registration,TC-AUTH-001–008,test_duplicate_registration_is_rejected; test_weak_password_validation; test_register,High,Covered
+REQ-AUTH-002,Login and client logout,TC-AUTH-009–012,test_login_and_list_services; test_valid_login_and_logout,High,Covered
+REQ-AUTH-003,JWT protected access,TC-AUTH-013–015,test_missing_authentication; test_protected_contract,High,Covered
+REQ-SVC-001,Active list search and filter,TC-SVC-001–007,test_search_is_case_insensitive; test_search; test_service_contract,High,Covered
+REQ-SVC-002,Provider discovery and availability,TC-SVC-008–010,test_customer_booking_journey; locust availability,High,Covered
+REQ-BOOK-001,Valid booking creation,TC-BOOK-001;007–009,test_booking_cancel_releases_slot; test_customer_booking_journey,High,Covered
+REQ-BOOK-002,Past unavailable and conflict prevention,TC-BOOK-002–006,test_past_booking_rejected; test_booking_cancel_releases_slot,High,Covered
+REQ-BOOK-003,Owned view reschedule cancellation,TC-BOOK-010–018,test_booking_cancel_releases_slot; test_customer_booking_journey,High,Partially automated
+REQ-PROV-001,Provider availability management,TC-PROV-001–005,API-ready manual coverage,High,Manual covered
+REQ-PROV-002,Provider-scoped appointments,TC-PROV-006–008,test_booking_references_are_valid,High,Partially automated
+REQ-ADMIN-001,Admin service management,TC-ADMIN-001–005,test_customer_cannot_use_admin_endpoint,High,Partially automated
+REQ-ADMIN-002,Admin operational visibility,TC-ADMIN-006–008,test_customer_cannot_use_admin_endpoint,High,Covered
+REQ-API-001,REST status and contract,TC-API-001–004,test_rest_api.py; test_invalid_resources_return_404,High,Covered
+REQ-GQL-001,GraphQL discovery and validation,TC-GQL-001–004,test_services_query; test_query_variables_and_filter; test_invalid_field_has_error,Medium,Covered
+REQ-GQL-002,Protected scoped appointments,TC-GQL-005–006,test_protected_appointments_query,High,Covered
+REQ-DB-001,Relational and status integrity,TC-DB-001–005,test_database.py,High,Covered
+REQ-UI-001,Responsive critical UI,TC-UI-001–005,test_login_remains_usable,High,Covered
+REQ-PERF-001,Local load targets,TC-PERF-001,performance/locustfile.py,Medium,Implemented not executed

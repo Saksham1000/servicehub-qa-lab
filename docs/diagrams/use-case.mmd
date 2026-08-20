@@ -1,0 +1,11 @@
+flowchart LR
+  C[Customer] --> R[Register / Login]
+  C --> S[Discover services/providers]
+  C --> B[Book appointment]
+  C --> M[View / Reschedule / Cancel own booking]
+  P[Provider] --> R
+  P --> A[Manage own availability]
+  P --> V[View / Complete own appointments]
+  D[Administrator] --> R
+  D --> U[View users/bookings]
+  D --> G[Manage service catalog]
